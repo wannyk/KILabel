@@ -481,15 +481,17 @@ NSString * const KILabelLinkKey = @"link";
         NSString *realURL = [text attribute:NSLinkAttributeName atIndex:matchRange.location effectiveRange:nil];
         if (realURL == nil)
             realURL = [plainText substringWithRange:matchRange];
-        
-        if (![self ignoreMatch:realURL])
+        if ([realURL hasPrefix:@"http"])
         {
-            if ([match resultType] == NSTextCheckingTypeLink)
+            if (![self ignoreMatch:realURL])
             {
-                [rangesForURLs addObject:@{KILabelLinkTypeKey : @(KILinkTypeURL),
-                                           KILabelRangeKey : [NSValue valueWithRange:matchRange],
-                                           KILabelLinkKey : realURL,
-                                        }];
+                if ([match resultType] == NSTextCheckingTypeLink)
+                {
+                    [rangesForURLs addObject:@{KILabelLinkTypeKey : @(KILinkTypeURL),
+                                               KILabelRangeKey : [NSValue valueWithRange:matchRange],
+                                               KILabelLinkKey : realURL,
+                                               }];
+                }
             }
         }
     }
